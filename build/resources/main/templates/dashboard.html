@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>금융상품 및 프로젝트 평가 시스템</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="layout">
+    <aside class="sidebar">
+        <h1>금융 의사결정 지원</h1>
+        <p>상품 수익성, 프로젝트 NPV/IRR, 시나리오 위험도를 한 화면에서 보여주는 포트폴리오 데모</p>
+        <ul>
+            <li><a href="/">대시보드</a></li><li><a href="/products">금융상품 관리</a></li><li><a href="/projects">프로젝트 평가</a></li><li><a href="/h2-console" target="_blank">H2 Console</a></li>
+        </ul>
+    </aside>
+    <main class="content">
+        <section class="topbar"><div><h2>금융상품 및 프로젝트 평가 시스템</h2><p class="muted">금융상품 수익률, 위험등급, 프로젝트 투자 타당성을 평가하는 의사결정 지원 화면</p></div></section>
+        <section class="grid metrics">
+            <article class="card metric"><span>등록 금융상품 수</span><strong th:text="${dashboard.totalProducts}"></strong></article>
+            <article class="card metric"><span>등록 프로젝트 수</span><strong th:text="${dashboard.totalProjects}"></strong></article>
+            <article class="card metric"><span>평균 수익률</span><strong th:text="${dashboard.averageReturnRate + '%'}"></strong></article>
+            <article class="card metric"><span>평균 위험도</span><strong th:text="${dashboard.averageRiskScore}"></strong></article>
+        </section>
+        <section class="split">
+            <article class="card"><div class="section-header"><h3>상품 수익률 / 위험도 차트</h3><a class="btn secondary" href="/products">상세 관리</a></div><div class="chart-box"><canvas id="productChart"></canvas></div></article>
+            <article class="card"><div class="section-header"><h3>최근 평가 결과</h3><a class="btn secondary" href="/projects">프로젝트 보기</a></div>
+                <div class="summary-strip">
+                    <div class="summary-item" th:each="item : ${dashboard.recentEvaluations}"><span th:text="${item.projectName}"></span><strong th:text="${item.grade.label}"></strong><p class="muted" th:text="${'NPV ' + item.npv + ' / IRR ' + item.irr + '% / Risk ' + item.riskScore}"></p></div>
+                </div></article>
+        </section>
+        <section class="card"><div class="section-header"><h3>금융상품 현황</h3><div class="actions"><a class="btn" href="/products/new">상품 등록</a><a class="btn secondary" href="/products">전체보기</a></div></div>
+            <div class="table-wrap"><table><thead><tr><th>상품명</th><th>유형</th><th>투자금액</th><th>기대수익률</th><th>위험등급</th><th>만기</th></tr></thead><tbody><tr th:each="p : ${products}"><td><a th:href="@{'/products/' + ${p.id}}" th:text="${p.name}"></a></td><td th:text="${p.productType.label}"></td><td th:text="${#numbers.formatInteger(p.investmentAmount, 1, 'COMMA')}"></td><td th:text="${p.expectedReturnRate + '%'}"></td><td><span class="badge" th:classappend="${' risk-' + p.riskGrade.name()}" th:text="${p.riskGrade.label}"></span></td><td th:text="${p.maturityMonths + '개월'}"></td></tr></tbody></table></div>
+        </section>
+        <section class="card"><div class="section-header"><h3>프로젝트 현황</h3><div class="actions"><a class="btn" href="/projects/new">프로젝트 등록</a><a class="btn secondary" href="/projects">전체보기</a></div></div>
+            <div class="table-wrap"><table><thead><tr><th>프로젝트명</th><th>유형</th><th>할인율</th><th>상태</th><th>평가 보기</th></tr></thead><tbody><tr th:each="p : ${projects}"><td th:text="${p.name}"></td><td th:text="${p.category}"></td><td th:text="${p.discountRate + '%'}"></td><td th:text="${p.status.label}"></td><td><a class="btn secondary" th:href="@{'/projects/' + ${p.id}}">상세</a></td></tr></tbody></table></div>
+        </section>
+    </main>
+</div>
+<script th:inline="javascript">
+const names = /*[[${dashboard.productNames}]]*/ [];
+const returns = /*[[${dashboard.productReturns}]]*/ [];
+const risks = /*[[${dashboard.productRiskScores}]]*/ [];
+new Chart(document.getElementById('productChart'), { type: 'bar', data: { labels: names, datasets: [ { label: '기대수익률(%)', data: returns, backgroundColor:'#1f5eff' }, { label: '위험도 점수', data: risks, backgroundColor:'#f59e0b' } ] }, options: { responsive:true, maintainAspectRatio:false } });
+</script>
+</body></html>
