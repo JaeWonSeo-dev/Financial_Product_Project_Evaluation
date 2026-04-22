@@ -1,5 +1,6 @@
 package com.portfolio.finance.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
@@ -12,6 +13,7 @@ public class ProjectCashFlow {
     private BigDecimal inflow;
     @Column(precision = 18, scale = 2)
     private BigDecimal outflow;
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private EvaluationProject project;
 
