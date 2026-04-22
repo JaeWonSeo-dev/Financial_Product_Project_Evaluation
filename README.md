@@ -7,7 +7,8 @@
 - 금융상품 관리: 채권/대출/펀드/파생상품 CRUD
 - 프로젝트 평가: 현금흐름 입력, NPV / IRR / Payback Period 계산
 - 위험 분석: 낙관/기준/비관 시나리오, 할인율 민감도 분석, VaR 스타일 손실 추정
-- REST API: `/api/dashboard`, `/api/products`, `/api/projects`, `/api/projects/{id}/evaluation`
+- 평가 스냅샷 이력: 프로젝트 평가 시 최근 10건 이력 저장 및 상세 화면/REST API 조회
+- REST API: `/api/dashboard`, `/api/products`, `/api/projects`, `/api/projects/{id}/evaluation`, `/api/projects/{id}/history`
 - H2 기반 샘플 데이터 자동 로딩
 - 계산 로직 테스트 포함
 
@@ -79,6 +80,7 @@
 3. **프로젝트 평가**
    - 현금흐름 입력
    - NPV/IRR/Payback/위험등급/시나리오/민감도 차트 확인
+   - 최근 평가 스냅샷 이력 조회
 
 ## REST API 예시
 - `GET /api/dashboard`
@@ -87,6 +89,7 @@
 - `GET /api/projects`
 - `POST /api/projects`
 - `GET /api/projects/{id}/evaluation`
+- `GET /api/projects/{id}/history`
 
 ## 테스트
 ```bash
@@ -100,6 +103,7 @@
 - 평가 등급 판정
 - 프로젝트 입력 검증(종료일 역전, 현금흐름 누락, 연차 중복)
 - API 예외 응답 포맷(검증 실패 / 리소스 미존재)
+- 평가 스냅샷 저장 및 최근 이력 조회 서비스 테스트
 
 ## API 품질 보강
 - 프로젝트 생성/수정 시 입력값 검증 강화

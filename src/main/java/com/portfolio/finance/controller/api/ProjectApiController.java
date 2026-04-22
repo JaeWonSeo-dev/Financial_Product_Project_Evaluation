@@ -1,6 +1,7 @@
 package com.portfolio.finance.controller.api;
 
 import com.portfolio.finance.domain.EvaluationProject;
+import com.portfolio.finance.domain.ProjectEvaluationSnapshot;
 import com.portfolio.finance.dto.ProjectEvaluationResponse;
 import com.portfolio.finance.dto.ProjectRequest;
 import com.portfolio.finance.service.ProjectEvaluationService;
@@ -20,4 +21,5 @@ public class ProjectApiController {
     @PutMapping("/{id}") public EvaluationProject update(@PathVariable Long id, @Valid @RequestBody ProjectRequest request) { return service.update(id, request); }
     @DeleteMapping("/{id}") public void delete(@PathVariable Long id) { service.delete(id); }
     @GetMapping("/{id}/evaluation") public ProjectEvaluationResponse evaluate(@PathVariable Long id) { return service.evaluate(id); }
+    @GetMapping("/{id}/history") public List<ProjectEvaluationSnapshot> history(@PathVariable Long id) { return service.findRecentSnapshots(id); }
 }
