@@ -1,9 +1,33 @@
 # 금융상품 및 프로젝트 평가 시스템
 
+![Java](https://img.shields.io/badge/Java-17-blue)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.5-6DB33F)
+![Build](https://img.shields.io/badge/build-passing-brightgreen)
+![Database](https://img.shields.io/badge/DB-H2-informational)
+![License](https://img.shields.io/badge/license-Portfolio-lightgrey)
+
 금융상품과 투자 프로젝트를 **수익성 + 위험도** 관점에서 함께 평가하는 Spring Boot 포트폴리오 프로젝트입니다.
 
 ## 한 줄 소개
 **금융상품 비교 + 프로젝트 투자 타당성 평가 + 평가 이력 관리**를 하나의 대시보드와 REST API로 제공하는 의사결정 지원 포트폴리오입니다.
+
+## 목차
+- [왜 이 프로젝트를 만들었는가](#왜-이-프로젝트를-만들었는가)
+- [핵심 기능](#핵심-기능)
+- [포트폴리오에서 강조할 포인트](#포트폴리오에서-강조할-포인트)
+- [기술 스택](#기술-스택)
+- [아키텍처 / ERD](#아키텍처--erd)
+- [사용자 시나리오](#사용자-시나리오)
+- [계산 공식과 가정](#계산-공식과-가정)
+- [실행 방법](#실행-방법)
+- [주요 화면](#주요-화면)
+- [실행 화면](#실행-화면)
+- [REST API 예시](#rest-api-예시)
+- [테스트](#테스트)
+- [API 품질 보강](#api-품질-보강)
+- [테스트 전략](#테스트-전략)
+- [제출용으로 보면 아쉬운 점](#제출용으로-보면-아쉬운-점)
+- [향후 개선 아이디어](#향후-개선-아이디어)
 
 ## 왜 이 프로젝트를 만들었는가
 실무/포트폴리오 관점에서 금융 도메인 프로젝트는 단순 CRUD보다,
@@ -41,6 +65,7 @@
   - Thymeleaf UI
   - REST API
   - Service/Controller 테스트
+  - 통합 테스트
 
 ## 기술 스택
 - Java 17
@@ -50,6 +75,30 @@
 - H2 Database
 - Chart.js
 - Gradle Wrapper
+
+## 아키텍처 / ERD
+- 상세 다이어그램 문서: [docs/architecture.md](docs/architecture.md)
+
+### 시스템 구성 요약
+```mermaid
+flowchart LR
+    U[User] --> V[Thymeleaf UI]
+    U --> A[REST API]
+    V --> C[Controller]
+    A --> AC[API Controller]
+    C --> S[Service Layer]
+    AC --> S
+    S --> E[FinancialCalculationEngine]
+    S --> R[Repository Layer]
+    R --> DB[(H2)]
+```
+
+### 도메인 관계 요약
+```mermaid
+erDiagram
+    EvaluationProject ||--o{ ProjectCashFlow : has
+    EvaluationProject ||--o{ ProjectEvaluationSnapshot : stores
+```
 
 ## 설계 의도
 단순한 CRUD가 아니라, 금융상품 속성(기대수익률/할인율/위험등급/변동성)과 프로젝트 투자 타당성(NPV/IRR/Payback)을 함께 보여줘 **금융 도메인 이해**를 드러내는 포트폴리오로 구성했습니다.
