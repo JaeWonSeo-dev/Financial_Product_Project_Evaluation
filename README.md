@@ -140,6 +140,16 @@
    - NPV/IRR/Payback/위험등급/시나리오/민감도 차트 확인
    - 최근 평가 스냅샷 이력 조회
 
+## 실행 화면
+### 1) 대시보드
+![대시보드](docs/screenshots/dashboard.png)
+
+### 2) 프로젝트 평가 상세
+![프로젝트 평가 상세](docs/screenshots/project-detail.png)
+
+### 3) 금융상품 상세
+![금융상품 상세](docs/screenshots/product-detail.png)
+
 ## REST API 예시
 - `GET /api/dashboard`
 - `GET /api/products`
