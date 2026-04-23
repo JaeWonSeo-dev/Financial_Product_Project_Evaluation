@@ -30,6 +30,18 @@
                     <div class="summary-item" th:each="item : ${dashboard.recentEvaluations}"><span th:text="${item.projectName}"></span><strong th:text="${item.grade.label}"></strong><p class="muted" th:text="${'NPV ' + item.npv + ' / IRR ' + item.irr + '% / Risk ' + item.riskScore}"></p></div>
                 </div></article>
         </section>
+        <section class="split">
+            <article class="card"><div class="section-header"><h3>프로젝트 비교 차트</h3><a class="btn secondary" href="/projects">평가 화면</a></div><div class="chart-box"><canvas id="projectComparisonChart"></canvas></div></article>
+            <article class="card"><div class="section-header"><h3>상위 프로젝트 비교 요약</h3><span class="muted">최근 평가 스냅샷 기준</span></div>
+                <div class="summary-strip">
+                    <div class="summary-item" th:each="item : ${dashboard.projectComparisons}">
+                        <span th:text="${item.projectName}"></span>
+                        <strong th:text="${item.grade.label}"></strong>
+                        <p class="muted" th:text="${'NPV ' + item.npv + ' / IRR ' + item.irr + '% / Risk ' + item.riskScore}"></p>
+                    </div>
+                    <p class="muted" th:if="${#lists.isEmpty(dashboard.projectComparisons)}">평가를 수행한 프로젝트가 아직 없습니다.</p>
+                </div></article>
+        </section>
         <section class="card"><div class="section-header"><h3>금융상품 현황</h3><div class="actions"><a class="btn" href="/products/new">상품 등록</a><a class="btn secondary" href="/products">전체보기</a></div></div>
             <div class="table-wrap"><table><thead><tr><th>상품명</th><th>유형</th><th>투자금액</th><th>기대수익률</th><th>위험등급</th><th>만기</th></tr></thead><tbody><tr th:each="p : ${products}"><td><a th:href="@{'/products/' + ${p.id}}" th:text="${p.name}"></a></td><td th:text="${p.productType.label}"></td><td th:text="${#numbers.formatInteger(p.investmentAmount, 1, 'COMMA')}"></td><td th:text="${p.expectedReturnRate + '%'}"></td><td><span class="badge" th:classappend="${' risk-' + p.riskGrade.name()}" th:text="${p.riskGrade.label}"></span></td><td th:text="${p.maturityMonths + '개월'}"></td></tr></tbody></table></div>
         </section>
@@ -42,6 +54,11 @@
 const names = /*[[${dashboard.productNames}]]*/ [];
 const returns = /*[[${dashboard.productReturns}]]*/ [];
 const risks = /*[[${dashboard.productRiskScores}]]*/ [];
+const projectComparisonItems = /*[[${dashboard.projectComparisons}]]*/ [];
+const projectNames = projectComparisonItems.map(item => item.projectName);
+const projectNpvs = projectComparisonItems.map(item => item.npv);
+const projectRiskScores = projectComparisonItems.map(item => item.riskScore);
 new Chart(document.getElementById('productChart'), { type: 'bar', data: { labels: names, datasets: [ { label: '기대수익률(%)', data: returns, backgroundColor:'#1f5eff' }, { label: '위험도 점수', data: risks, backgroundColor:'#f59e0b' } ] }, options: { responsive:true, maintainAspectRatio:false } });
+new Chart(document.getElementById('projectComparisonChart'), { type: 'bar', data: { labels: projectNames, datasets: [ { label: 'NPV', data: projectNpvs, backgroundColor:'#16a34a' }, { label: '위험도 점수', data: projectRiskScores, backgroundColor:'#ef4444' } ] }, options: { responsive:true, maintainAspectRatio:false } });
 </script>
 </body></html>

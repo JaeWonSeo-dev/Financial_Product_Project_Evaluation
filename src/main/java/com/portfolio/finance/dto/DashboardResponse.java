@@ -10,5 +10,7 @@ public record DashboardResponse(
         List<ProjectEvaluationResponse> recentEvaluations,
         List<String> productNames,
         List<Double> productReturns,
-        List<Double> productRiskScores
-) {}
+        List<Double> productRiskScores,
+        List<ProjectComparisonPoint> projectComparisons
+) {
+}

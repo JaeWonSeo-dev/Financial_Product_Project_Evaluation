@@ -4,6 +4,7 @@ import com.portfolio.finance.domain.EvaluationProject;
 import com.portfolio.finance.domain.ProjectCashFlow;
 import com.portfolio.finance.domain.ProjectEvaluationSnapshot;
 import com.portfolio.finance.domain.ProjectStatus;
+import com.portfolio.finance.dto.ProjectEvaluationSnapshotResponse;
 import com.portfolio.finance.repository.EvaluationProjectRepository;
 import com.portfolio.finance.repository.ProjectEvaluationSnapshotRepository;
 import org.junit.jupiter.api.Test;
@@ -53,10 +54,11 @@ class ProjectEvaluationServiceTest {
         when(repository.findWithCashFlowsById(1L)).thenReturn(Optional.of(project));
         when(snapshotRepository.findTop10ByProjectIdOrderByEvaluatedAtDesc(1L)).thenReturn(List.of(snapshot));
 
-        List<ProjectEvaluationSnapshot> result = service.findRecentSnapshots(1L);
+        List<ProjectEvaluationSnapshotResponse> result = service.findRecentSnapshots(1L);
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getNpv()).isEqualTo(120.0);
+        assertThat(result.get(0).npv()).isEqualTo(120.0);
+        assertThat(result.get(0).projectName()).isEqualTo("신규 디지털 보험 플랫폼");
     }
 
     private EvaluationProject sampleProject() {
